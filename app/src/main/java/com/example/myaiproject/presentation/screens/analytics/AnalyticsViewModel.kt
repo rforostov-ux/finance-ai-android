@@ -37,6 +37,11 @@ class AnalyticsViewModel @Inject constructor(
         loadAnalytics()
     }
 
+    fun refresh() {
+        viewModelScope.launch {
+            repository.syncWithServer()
+        }
+    }
     private fun loadAnalytics() {
         viewModelScope.launch {
             repository.getTransactions().collect { list ->

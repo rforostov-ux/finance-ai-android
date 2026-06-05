@@ -4,6 +4,8 @@ import com.example.myaiproject.data.remote.dto.LoginRequest
 import com.example.myaiproject.data.remote.dto.RegisterRequest
 import com.example.myaiproject.data.remote.dto.TokenResponse
 import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.PUT
 import retrofit2.http.POST
 
 interface AuthApi {
@@ -12,4 +14,5 @@ interface AuthApi {
 
     @POST("auth/login")
     suspend fun login(@Body body: LoginRequest): TokenResponse
+
 }

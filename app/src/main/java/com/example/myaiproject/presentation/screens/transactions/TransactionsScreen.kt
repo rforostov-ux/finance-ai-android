@@ -46,7 +46,7 @@ fun TransactionsScreen(viewModel: TransactionsViewModel = hiltViewModel()) {
                             text = "Все операции",
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp,
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp)
                         )
                     }
                     items(uiState.transactions, key = { it.id }) { transaction ->
@@ -63,7 +63,7 @@ fun TransactionsScreen(viewModel: TransactionsViewModel = hiltViewModel()) {
             onClick = { viewModel.showDialog() },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 80.dp)
+                .padding(end = 16.dp, bottom = 120.dp)
         ) {
             Icon(Icons.Default.Add, contentDescription = "Добавить")
         }

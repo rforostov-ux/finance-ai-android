@@ -33,7 +33,7 @@ fun AnalyticsScreen(viewModel: AnalyticsViewModel = hiltViewModel()) {
                 text = "Аналитика",
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp)
             )
         }
 

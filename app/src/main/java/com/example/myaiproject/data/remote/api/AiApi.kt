@@ -7,7 +7,19 @@ import retrofit2.http.POST
 
 data class ChatRequest(val message: String, val history: List<Any> = emptyList())
 data class AnalysisResponse(val analysis: String)
-data class ChatResponse(val response: String)
+
+data class TransactionResult(
+    val detected: Boolean,
+    val amount: Double?,
+    val type: String?,
+    val category: String?,
+    val description: String?
+)
+
+data class ChatResponse(
+    val response: String,
+    val transaction: TransactionResult?
+)
 
 interface AiApi {
     @GET("ai/analyze")

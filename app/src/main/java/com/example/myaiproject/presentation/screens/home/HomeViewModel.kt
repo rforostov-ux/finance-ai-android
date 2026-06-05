@@ -33,6 +33,11 @@ class HomeViewModel @Inject constructor(
         loadData()
     }
 
+    fun refresh() {
+        viewModelScope.launch {
+            transactionRepository.syncWithServer()
+        }
+    }
     fun loadData() {
         viewModelScope.launch {
             transactionRepository.syncWithServer()

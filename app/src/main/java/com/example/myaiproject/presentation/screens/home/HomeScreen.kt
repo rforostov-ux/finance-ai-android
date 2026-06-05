@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myaiproject.presentation.components.TransactionItem
+import com.example.myaiproject.presentation.utils.formatAmount
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
@@ -67,7 +68,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
 @Composable
 fun BalanceCard(balance: Double, income: Double, expense: Double) {
     Card(
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        modifier = Modifier.fillMaxWidth().padding(24.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
@@ -82,7 +83,7 @@ fun BalanceCard(balance: Double, income: Double, expense: Double) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "${String.format("%.2f", balance)} ₽",
+                text = balance.formatAmount(),
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Bold
@@ -99,7 +100,7 @@ fun BalanceCard(balance: Double, income: Double, expense: Double) {
                         fontSize = 12.sp
                     )
                     Text(
-                        text = "+${String.format("%.2f", income)} ₽",
+                        text = "+${income.formatAmount()}",
                         color = Color(0xFF80FF80),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp
@@ -112,7 +113,7 @@ fun BalanceCard(balance: Double, income: Double, expense: Double) {
                         fontSize = 12.sp
                     )
                     Text(
-                        text = "-${String.format("%.2f", expense)} ₽",
+                        text = "-${expense.formatAmount()}",
                         color = Color(0xFFFF8080),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp

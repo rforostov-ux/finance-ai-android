@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.myaiproject.data.remote.api.AiApi
 import com.example.myaiproject.data.remote.api.ChatRequest
 import com.example.myaiproject.data.repository.AuthRepository
+import com.example.myaiproject.data.repository.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,7 +13,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class ChatMessage(val text: String, val isUser: Boolean)
+data class ChatMessage(
+    val text: String,
+    val isUser: Boolean,
+    val isTransactionAdded: Boolean = false
+)
 
 data class AiUiState(
     val messages: List<ChatMessage> = emptyList(),
@@ -23,7 +28,8 @@ data class AiUiState(
 @HiltViewModel
 class AiViewModel @Inject constructor(
     private val aiApi: AiApi,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val transactionRepository: TransactionRepository  // ← обязательно
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AiUiState())
@@ -48,13 +54,22 @@ class AiViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val token = authRepository.getToken() ?: return@launch
-                val response = aiApi.chat(
-                    "Bearer $token",
-                    ChatRequest(message = message)
-                )
+                val response = aiApi.chat("Bearer $token", ChatRequest(message = message))
+
+                val transactionAdded = response.transaction?.detected == true
+
+                if (transactionAdded) {
+                    // Принудительно синхронизируем Room с сервером
+                    transactionRepository.syncWithServer()
+                }
+
                 _uiState.update {
                     it.copy(
-                        messages = it.messages + ChatMessage(response.response, isUser = false),
+                        messages = it.messages + ChatMessage(
+                            text = response.response,
+                            isUser = false,
+                            isTransactionAdded = transactionAdded
+                        ),
                         isLoading = false
                     )
                 }
@@ -62,7 +77,7 @@ class AiViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         messages = it.messages + ChatMessage(
-                            "Ошибка: проверьте подключение к серверу",
+                            "Ошибка: ${e.message}",
                             isUser = false
                         ),
                         isLoading = false
@@ -97,7 +112,7 @@ class AiViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         messages = it.messages + ChatMessage(
-                            "Ошибка: проверьте подключение к серверу",
+                            "Ошибка: ${e.message}",
                             isUser = false
                         ),
                         isLoading = false

@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun AiScreen(viewModel: AiViewModel = hiltViewModel()) {
@@ -32,7 +33,7 @@ fun AiScreen(viewModel: AiViewModel = hiltViewModel()) {
             text = "AI Ассистент",
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp)
         )
 
         // Кнопка анализа
@@ -40,7 +41,7 @@ fun AiScreen(viewModel: AiViewModel = hiltViewModel()) {
             onClick = { viewModel.analyzeFinances() },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp, vertical = 30.dp),
             enabled = !uiState.isLoading
         ) {
             Text("Анализировать расходы")
@@ -111,10 +112,9 @@ fun AiScreen(viewModel: AiViewModel = hiltViewModel()) {
 
 @Composable
 fun ChatBubble(message: ChatMessage) {
-    Row(
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = if (message.isUser)
-            Arrangement.End else Arrangement.Start
+        horizontalAlignment = if (message.isUser) Alignment.End else Alignment.Start
     ) {
         Card(
             modifier = Modifier.widthIn(max = 280.dp),
@@ -134,6 +134,24 @@ fun ChatBubble(message: ChatMessage) {
                     MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 14.sp
             )
+        }
+
+        // Показываем метку если транзакция была создана автоматически
+        if (message.isTransactionAdded) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFF10B981)  // зелёный
+                )
+            ) {
+                Text(
+                    text = "✓ Транзакция добавлена автоматически",
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                    fontSize = 11.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Medium
+                )
+            }
         }
     }
 }

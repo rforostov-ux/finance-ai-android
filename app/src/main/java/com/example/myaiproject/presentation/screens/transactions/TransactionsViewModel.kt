@@ -20,6 +20,7 @@ data class TransactionsUiState(
     val error: String? = null
 )
 
+
 @HiltViewModel
 class TransactionsViewModel @Inject constructor(
     private val repository: TransactionRepository
@@ -43,6 +44,12 @@ class TransactionsViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            repository.syncWithServer()
         }
     }
 
